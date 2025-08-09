@@ -1,0 +1,47 @@
+name: Yonhap News Monitor
+
+on:
+  schedule:
+    # 매 30분마다 실행 (시간대별 뉴스 모니터링)
+    - cron: '0,30 * * * *'
+  workflow_dispatch: # 수동 실행 가능
+
+jobs:
+  monitor-yonhap-news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Download previous processed articles
+      uses: actions/download-artifact@v3
+      continue-on-error: true
+      with:
+        name: yonhap-processed-articles
+        path: .
+
+    - name: Run Yonhap News Monitor
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: python yonhap_news_monitor.py
+    
+    - name: Upload processed articles
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: yonhap-processed-articles
+        path: yonhap_processed_articles.json
+        retention-days: 30
