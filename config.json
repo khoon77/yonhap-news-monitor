@@ -1,0 +1,22 @@
+{
+    "telegram": {
+        "bot_token_env": "TELEGRAM_BOT_TOKEN",
+        "chat_id_env": "TELEGRAM_CHAT_ID"
+    },
+    "monitoring": {
+        "interval_minutes": 30,
+        "max_articles_per_run": 5
+    },
+    "news_sources": {
+        "yonhap_headlines": "https://www.yna.co.kr/report/headline?site=wholemenu_headline"
+    },
+    "storage": {
+        "processed_articles_file": "yonhap_processed_articles.json",
+        "max_stored_articles": 1000,
+        "log_file": "yonhap_news_monitor.log",
+        "log_level": "INFO"
+    },
+    "keywords": {
+        "exclude": ["광고", "홍보", "이벤트"]
+    }
+}
